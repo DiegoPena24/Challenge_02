@@ -12,7 +12,6 @@ public interface BookService {
 
     Book createBook(Book book);
 
-    // 👇 firma que te falta
     Book updateBook(Long id, Book book);
 
     void deleteBook(Long id);
