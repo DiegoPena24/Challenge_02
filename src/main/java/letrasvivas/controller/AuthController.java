@@ -68,14 +68,4 @@ public class AuthController {
                     .body("Error en el login: " + e.getMessage());
         }
     }
-
-    @GetMapping("/api/user/hello")
-    public String userHello() {
-        return "Hola desde /api/user (acceso USER o ADMIN)";
-    }
-
-    @GetMapping("/api/admin/hello")
-    public String adminHello() {
-        return "Hola desde /api/admin (solo ADMIN)";
-    }
 }

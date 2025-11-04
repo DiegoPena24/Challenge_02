@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/books")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class BookController {
+
     private final BookService service;
 
     @Autowired

@@ -20,10 +20,9 @@ public class Book {
     @Max(value = 2100, message = "Publication year must be realistic")
     private Integer publicationYear;
 
-    // Constructors, getters and setters
     public Book() {}
 
-    public Book(String title, String author, int publicationYear) {
+    public Book(String title, String author, Integer publicationYear) {
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
@@ -32,14 +31,11 @@ public class Book {
     public Long getId() { return id; }
 
     public String getTitle() { return title; }
-
     public void setTitle(String title) { this.title = title; }
 
     public String getAuthor() { return author; }
-
     public void setAuthor(String author) { this.author = author; }
 
-    public int getPublicationYear() { return publicationYear; }
-
-    public void setPublicationYear(int publicationYear) { this.publicationYear = publicationYear; }
+    public Integer getPublicationYear() { return publicationYear; } // ✅ ahora Integer
+    public void setPublicationYear(Integer publicationYear) { this.publicationYear = publicationYear; } // ✅ también Integer
 }
