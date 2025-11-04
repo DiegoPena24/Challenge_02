@@ -1,0 +1,13 @@
+<div class="auth-container">
+  <h2>Registrarse</h2>
+  <form [formGroup]="form" (ngSubmit)="register()">
+    <input formControlName="email" placeholder="Correo electrónico" />
+    <input type="password" formControlName="password" placeholder="Contraseña" />
+    <select formControlName="role">
+      <option value="USER">Usuario</option>
+      <option value="ADMIN">Administrador</option>
+    </select>
+    <button type="submit">Registrar</button>
+  </form>
+  <p *ngIf="message">{{ message }}</p>
+</div>

@@ -1,0 +1,10 @@
+<div class="book-form">
+  <h3>Agregar libro</h3>
+  <form [formGroup]="form" (ngSubmit)="saveBook()">
+    <input formControlName="title" placeholder="Título" />
+    <input formControlName="author" placeholder="Autor" />
+    <input formControlName="year" type="number" placeholder="Año" />
+    <button type="submit">Guardar</button>
+  </form>
+  <p *ngIf="message">{{ message }}</p>
+</div>

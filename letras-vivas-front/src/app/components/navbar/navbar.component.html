@@ -1,0 +1,9 @@
+<nav class="navbar">
+  <a routerLink="/" class="brand">Letras Vivas</a>
+  <div class="links">
+    <a routerLink="/login">Login</a>
+    <a routerLink="/register">Registrar</a>
+    <a routerLink="/admin" *ngIf="role === 'ADMIN'">Panel Admin</a>
+    <button (click)="logout()" *ngIf="isLoggedIn">Cerrar sesión</button>
+  </div>
+</nav>
