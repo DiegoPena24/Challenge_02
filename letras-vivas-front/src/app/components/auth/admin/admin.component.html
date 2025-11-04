@@ -1,0 +1,57 @@
+<div class="admin-panel">
+  <h2>Panel del Administrador 📚</h2>
+
+  <form [formGroup]="form" (ngSubmit)="saveBook()">
+    <input type="hidden" formControlName="id" />
+
+    <div class="form-group">
+      <label>Título:</label>
+      <input formControlName="title" placeholder="Título del libro" />
+    </div>
+
+    <div class="form-group">
+      <label>Autor:</label>
+      <input formControlName="author" placeholder="Autor del libro" />
+    </div>
+
+    <div class="form-group">
+      <label>Año de publicación:</label>
+      <input type="number" formControlName="publicationYear" />
+    </div>
+
+    <button type="submit">{{ isEditing ? 'Actualizar libro' : 'Agregar libro' }}</button>
+    <button type="button" (click)="resetForm()" *ngIf="isEditing" class="cancel">Cancelar</button>
+  </form>
+
+  <p class="message">{{ message }}</p>
+
+  <hr />
+
+  <h3>📖 Libros Registrados</h3>
+  <table *ngIf="books.length > 0; else noBooks">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Año</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of books">
+        <td>{{ b.id }}</td>
+        <td>{{ b.title }}</td>
+        <td>{{ b.author }}</td>
+        <td>{{ b.publicationYear }}</td>
+        <td>
+          <button class="edit" (click)="editBook(b)">Editar</button>
+          <button class="delete" (click)="deleteBook(b.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noBooks>
+    <p class="no-data">📭 No hay libros registrados aún.</p>
+  </ng-template>
+</div>

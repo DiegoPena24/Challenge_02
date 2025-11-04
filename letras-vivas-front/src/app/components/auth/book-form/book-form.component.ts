@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 
 @Component({
@@ -7,27 +6,40 @@ import { ApiService } from '../../../services/api.service';
   templateUrl: './book-form.component.html',
   styleUrls: ['./book-form.component.scss']
 })
-export class BookFormComponent {
-  form = this.fb.group({
-    title: ['', Validators.required],
-    author: ['', Validators.required],
-    year: [new Date().getFullYear(), Validators.required]
-  });
+export class BookFormComponent implements OnInit {
+  books: any[] = [];
+  filteredBooks: any[] = [];
+  searchTerm: string = '';
   message = '';
 
-  constructor(private fb: FormBuilder, private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {}
 
-  saveBook(): void {
-    if (this.form.invalid) return;
+  ngOnInit(): void {
+    this.loadBooks();
+  }
 
-    // ✅ Conversión segura para evitar null / undefined
-    const title = this.form.value.title ?? '';
-    const author = this.form.value.author ?? '';
-    const year = Number(this.form.value.year ?? new Date().getFullYear());
-
-    this.apiService.createProject({ title, author, year }).subscribe({
-      next: () => (this.message = 'Libro agregado correctamente'),
-      error: () => (this.message = 'Error al guardar libro')
+  loadBooks(): void {
+    this.apiService.getBooks().subscribe({
+      next: (data) => {
+        this.books = data;
+        this.filteredBooks = data;
+        if (this.books.length === 0) {
+          this.message = 'No hay libros registrados todavía.';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener libros:', err);
+        this.message = '⚠️ Error al cargar los libros.';
+      }
     });
+  }
+
+  onSearchChange(): void {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredBooks = this.books.filter(
+      (book) =>
+        book.title.toLowerCase().includes(term) ||
+        book.author.toLowerCase().includes(term)
+    );
   }
 }

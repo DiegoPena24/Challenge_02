@@ -2,32 +2,34 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-// ✅ Componentes
+// Componentes
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { BookFormComponent } from './components/auth/book-form/book-form.component';
 
-// ✅ Servicios
+// Servicios
 import { AuthService } from './services/auth.service';
 import { TokenStorageService } from './services/token-storage.service';
 import { ApiService } from './services/api.service';
 
-// ✅ Guards
+//  Guards
 import { AuthGuard } from './helpers/auth.guard';
 import { RoleGuard } from './helpers/role.guard';
 
-// ✅ Angular Material (opcional)
+// Angular Material
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AdminComponent } from './components/auth/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -36,11 +38,13 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     RegisterComponent,
     BookFormComponent,
     NavbarComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,

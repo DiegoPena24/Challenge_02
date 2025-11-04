@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { TokenStorageService } from '../../../services/token-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -14,32 +13,52 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
-  loading = false;
-  error = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private tokenStorage: TokenStorageService,
-    private router: Router
-  ) {}
+  message = '';
 
- login(): void {
-  if (this.form.invalid) return;
-  this.loading = true;
+  constructor(private fb: FormBuilder, private apiService: ApiService, private router: Router) { }
 
-  const email = this.form.value.email ?? '';      // convierte null → ''
-  const password = this.form.value.password ?? ''; // convierte null → ''
+  login(): void {
+  if (this.form.invalid) {
+    this.message = 'Por favor completa todos los campos correctamente.';
+    return;
+  }
 
-  this.auth.login({ email, password }).subscribe({
-    next: (res) => {
-      this.tokenStorage.saveToken(res.token);
-      const role = this.tokenStorage.getRoleFromToken();
-      this.router.navigate([role === 'ADMIN' ? '/admin' : '/user']);
+  const credentials = {
+    email: this.form.value.email ?? '',
+    password: this.form.value.password ?? ''
+  };
+
+  this.apiService.login(credentials).subscribe({
+    next: (data: any) => {
+      console.log('Respuesta del backend:', data);
+
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+
+        this.message = '✅ Inicio de sesión exitoso.';
+
+        setTimeout(() => {
+          const role = data.role?.toUpperCase();
+          console.log('Rol detectado:', role);
+
+          if (role === 'ADMIN') {
+          } else {
+            this.router.navigate(['/admin']);
+          }
+        }, 500);
+      } else {
+        this.message = '⚠️ No se recibió token. Verifica el backend.';
+      }
     },
-    error: () => {
-      this.error = 'Credenciales inválidas';
-      this.loading = false;
+
+    error: (err) => {
+      console.error('Error al iniciar sesión:', err);
+      this.message =
+        err.status === 401
+          ? '❌ Credenciales incorrectas.'
+          : '⚠️ Error al iniciar sesión.';
     }
   });
 }

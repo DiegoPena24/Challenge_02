@@ -1,25 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Project } from '../models/project.model';
-import { TokenStorageService } from './token-storage.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ApiService {
-  private apiUrl = 'http://localhost:8080/api/admin/books';
 
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) {}
+  private apiUrl = 'http://localhost:8080/api'; 
 
-  private getHeaders(): HttpHeaders {
-    const token = this.tokenStorage.getToken();
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  constructor(private http: HttpClient) {}
+
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+    });
   }
 
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.apiUrl, { headers: this.getHeaders() });
+  
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl.replace('/api', '')}/login`, credentials, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
   }
 
-  createProject(project: Project): Observable<Project> {
-    return this.http.post<Project>(this.apiUrl, project, { headers: this.getHeaders() });
+  createBook(book: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/books`, book, { headers: this.getAuthHeaders() });
+  }
+
+  getBooks(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/books`, { headers: this.getAuthHeaders() });
+  }
+
+  updateBook(id: number, book: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/books/${id}`, book, { headers: this.getAuthHeaders() });
+  }
+
+  deleteBook(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/books/${id}`, { headers: this.getAuthHeaders() });
   }
 }

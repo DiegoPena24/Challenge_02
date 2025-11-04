@@ -1,10 +1,26 @@
-<div class="book-form">
-  <h3>Agregar libro</h3>
-  <form [formGroup]="form" (ngSubmit)="saveBook()">
-    <input formControlName="title" placeholder="Título" />
-    <input formControlName="author" placeholder="Autor" />
-    <input formControlName="year" type="number" placeholder="Año" />
-    <button type="submit">Guardar</button>
-  </form>
-  <p *ngIf="message">{{ message }}</p>
+<div class="book-list">
+  <h2>📚 Lista de Libros Registrados</h2>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por título o autor..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearchChange()"
+    />
+  </div>
+
+  <p *ngIf="message" class="message">{{ message }}</p>
+
+  <div class="book-grid" *ngIf="filteredBooks.length > 0">
+    <div class="book-card" *ngFor="let book of filteredBooks">
+      <h3>{{ book.title }}</h3>
+      <p><strong>Autor:</strong> {{ book.author }}</p>
+      <p><strong>Año de publicación:</strong> {{ book.publicationYear }}</p>
+    </div>
+  </div>
+
+  <p *ngIf="filteredBooks.length === 0 && books.length > 0" class="no-results">
+    ❌ No se encontraron libros que coincidan con tu búsqueda.
+  </p>
 </div>

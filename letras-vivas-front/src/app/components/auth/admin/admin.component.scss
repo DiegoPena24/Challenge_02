@@ -1,0 +1,152 @@
+.admin-panel {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+
+  h2 {
+    text-align: center;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .form-group {
+      flex: 1 1 calc(50% - 10px);
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.3rem;
+      }
+
+      input {
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        transition: 0.3s;
+        font-size: 15px;
+
+        &:focus {
+          border-color: #27ae60;
+          box-shadow: 0 0 8px rgba(39, 174, 96, 0.3);
+        }
+      }
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+
+    button[type='submit'] {
+      background: #27ae60;
+
+      &:hover {
+        background: #1e8449;
+      }
+    }
+
+    .cancel {
+      background: #e74c3c;
+
+      &:hover {
+        background: #c0392b;
+      }
+    }
+  }
+
+  hr {
+    margin: 2rem 0;
+    border: none;
+    height: 2px;
+    background: #eee;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 15px;
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #27ae60;
+      color: #fff;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .edit {
+      background: #3498db;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 5px;
+
+      &:hover {
+        background: #2980b9;
+      }
+    }
+
+    .delete {
+      background: #e74c3c;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background: #c0392b;
+      }
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+  }
+
+  .message {
+    text-align: center;
+    font-weight: 500;
+    margin-top: 1rem;
+    color: #2c3e50;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
