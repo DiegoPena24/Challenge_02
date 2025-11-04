@@ -6,8 +6,8 @@
       type="text"
       placeholder="Buscar por título o autor..."
       [(ngModel)]="searchTerm"
-      (input)="onSearchChange()"
     />
+    <button class="search-btn" (click)="performSearch()">🔍 Buscar</button>
   </div>
 
   <p *ngIf="message" class="message">{{ message }}</p>

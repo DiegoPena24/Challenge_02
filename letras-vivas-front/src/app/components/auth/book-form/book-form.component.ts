@@ -34,12 +34,31 @@ export class BookFormComponent implements OnInit {
     });
   }
 
-  onSearchChange(): void {
-    const term = this.searchTerm.toLowerCase();
+  performSearch(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredBooks = this.books;
+      this.message = '';
+      return;
+    }
+
+    this.message = '🔍 Buscando libros...';
+
+    // Usar búsqueda local por ahora, ya que el endpoint de búsqueda puede no existir
+    this.fallbackLocalSearch();
+  }
+
+  private fallbackLocalSearch(): void {
+    const term = this.searchTerm.toLowerCase().trim();
     this.filteredBooks = this.books.filter(
       (book) =>
         book.title.toLowerCase().includes(term) ||
         book.author.toLowerCase().includes(term)
     );
+
+    if (this.filteredBooks.length === 0) {
+      this.message = '❌ No se encontraron libros que coincidan con tu búsqueda.';
+    } else {
+      this.message = `✅ Encontrados ${this.filteredBooks.length} libro(s).`;
+    }
   }
 }

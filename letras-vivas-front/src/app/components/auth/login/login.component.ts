@@ -18,6 +18,17 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private apiService: ApiService, private router: Router) { }
 
+  private decodeToken(token: string): any {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = atob(payload);
+      return JSON.parse(decoded);
+    } catch (error) {
+      console.error('Error decodificando token:', error);
+      return null;
+    }
+  }
+
   login(): void {
   if (this.form.invalid) {
     this.message = 'Por favor completa todos los campos correctamente.';
@@ -35,17 +46,25 @@ export class LoginComponent {
 
       if (data && data.token) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
+
+        // Decodificar el token para obtener el rol
+        const decodedToken = this.decodeToken(data.token);
+        const role = decodedToken?.role?.toUpperCase().replace(/^ROLE_/, '');
+        localStorage.setItem('role', role);
+
+        console.log('Token decodificado:', decodedToken);
+        console.log('Rol extraído del token:', role);
 
         this.message = '✅ Inicio de sesión exitoso.';
 
         setTimeout(() => {
-          const role = data.role?.toUpperCase();
-          console.log('Rol detectado:', role);
-
           if (role === 'ADMIN') {
-          } else {
             this.router.navigate(['/admin']);
+          } else if (role === 'USER') {
+            this.router.navigate(['/book']);
+          } else {
+            console.error('Rol desconocido:', role);
+            this.message = '⚠️ Rol desconocido. Contacta al administrador.';
           }
         }, 500);
       } else {

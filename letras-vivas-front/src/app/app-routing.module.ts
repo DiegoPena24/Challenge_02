@@ -11,8 +11,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'admin', component: AdminComponent },
-  { path: 'book', component: BookFormComponent, canActivate: [AuthGuard, RoleGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard, RoleGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'book', component: BookFormComponent, canActivate: [AuthGuard, RoleGuard], data: { expectedRole: 'USER' } },
 ];
 
 @NgModule({

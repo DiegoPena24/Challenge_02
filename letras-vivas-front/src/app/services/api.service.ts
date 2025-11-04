@@ -40,4 +40,8 @@ export class ApiService {
   deleteBook(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/books/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  searchBooks(term: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/books/search?term=${encodeURIComponent(term)}`, { headers: this.getAuthHeaders() });
+  }
 }
