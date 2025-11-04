@@ -19,19 +19,20 @@ export class RegisterComponent {
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}
 
   register(): void {
-    if (this.form.invalid) return;
+  if (this.form.invalid) return;
 
-    // ✅ Conversión segura
-    const email = this.form.value.email ?? '';
-    const password = this.form.value.password ?? '';
-    const role = this.form.value.role ?? 'USER';
+  const email = this.form.value.email ?? '';
+  const password = this.form.value.password ?? '';
+  const role = this.form.value.role ?? 'USER';
 
-    this.auth.register({ email, password, role }).subscribe({
-      next: () => {
-        this.message = 'Usuario registrado correctamente';
-        setTimeout(() => this.router.navigate(['/login']), 1500);
-      },
-      error: () => (this.message = 'Error al registrar usuario')
-    });
-  }
+  this.auth.register({ email, password, role }).subscribe({
+    next: (res) => {
+      this.message = res.message; // ✅ mostrará "Usuario registrado con éxito."
+      setTimeout(() => this.router.navigate(['/login']), 1500);
+    },
+    error: (err) => {
+      this.message = err.error?.message || 'Error al registrar usuario';
+    }
+  });
+}
 }
