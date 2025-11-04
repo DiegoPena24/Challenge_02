@@ -16,26 +16,18 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String username;
+    public Long id;
 
     @Column(unique = true, nullable = false)
-    private String password;
+    public String email;
 
-    private String role = "ROLE_USER";
-    public User() {}
+    @Column(nullable = false)
+    public String password;
 
-    public User(Long id, String username, String password, String role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
+    @Enumerated(EnumType.STRING)
+    public Role role;
+
+    public enum Role {
+        ADMIN, USER
     }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
 }

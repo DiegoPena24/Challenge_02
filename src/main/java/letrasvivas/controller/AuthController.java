@@ -2,64 +2,60 @@ package letrasvivas.controller;
 
 import letrasvivas.dto.LoginRequest;
 import letrasvivas.dto.LoginResponse;
+import letrasvivas.dto.RegisterRequest;
 import letrasvivas.model.User;
 import letrasvivas.repository.UserRepository;
 import letrasvivas.security.JwtUtil;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private final AuthenticationManager authManager;
-    private final JwtUtil jwtUtil;
     private final UserRepository userRepo;
     private final PasswordEncoder encoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil, UserRepository userRepo, PasswordEncoder encoder) {
+    public AuthController(AuthenticationManager authManager, UserRepository userRepo, PasswordEncoder encoder, JwtUtil jwtUtil) {
         this.authManager = authManager;
-        this.jwtUtil = jwtUtil;
         this.userRepo = userRepo;
         this.encoder = encoder;
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        try {
-            Authentication auth = authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-            String token = jwtUtil.generateToken(request.getUsername());
-            return ResponseEntity.ok(new LoginResponse(token));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Credenciales inválidas");
-        }
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody LoginRequest request) {
-        if (userRepo.findByUsername(request.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Usuario ya existe");
+    public String register(@RequestBody RegisterRequest request) {
+        if (userRepo.existsByEmail(request.getEmail())) {
+            return "El correo ya está registrado.";
         }
-        User u = new User();
-        u.setUsername(request.getUsername());
-        u.setPassword(encoder.encode(request.getPassword()));
-        u.setRole("ROLE_USER");
-        userRepo.save(u);
-        return ResponseEntity.ok("Usuario registrado");
+        User user = new User(null, request.getEmail(), encoder.encode(request.getPassword()), request.getRole());
+        userRepo.save(user);
+        return "Usuario registrado con éxito.";
     }
 
-    @GetMapping("/api/protegido")
-    public ResponseEntity<?> protegido() {
-        return ResponseEntity.ok("Bienvenido, acceso concedido a endpoint protegido ✅");
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request) {
+        authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        User user = userRepo.findByEmail(request.getEmail()).orElseThrow();
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        return new LoginResponse(token);
     }
 
+    @GetMapping("/api/user/hello")
+    public String userHello() {
+        return "Hola desde /api/user (acceso USER o ADMIN)";
+    }
+
+    @GetMapping("/api/admin/hello")
+    public String adminHello() {
+        return "Hola desde /api/admin (solo ADMIN)";
+    }
 }
